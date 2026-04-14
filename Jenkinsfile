@@ -34,7 +34,7 @@ pipeline {
         }
         stage('run container'){
             steps{
-                bat 'docker run -d -p 8085:8080 html-app'
+                bat 'docker run -d -p 8085:80 html-app'
             }
         }
     }
