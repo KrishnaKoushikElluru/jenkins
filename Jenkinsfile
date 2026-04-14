@@ -16,7 +16,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        bat 'docker build -t python-app .'
+                        bat 'docker build -t html-app .'
                     } catch (err) {
                         echo 'Docker build failed'
                         currentBuild.result = 'FAILURE'
@@ -29,7 +29,7 @@ pipeline {
         stage('Deploy Container') {
             steps {
                 retry(2) {
-                    bat 'docker run -d -p 8085:80 python-app'
+                    bat 'docker run -d -p 8085:80 html-app'
                 }
             }
         }
