@@ -1,26 +1,44 @@
 pipeline {
     agent any
-
     environment{
         DOCKER = '"C:/Program Files/Docker/Docker/resources/bin/docker.exe"'
-
     }
 
     stages {
-        stage('Build Docker Image') {
+
+        stage('Checkout Local Git') {
             steps {
-                bat '%DOCKER% build -t python-app .'
+                git url: 'C:/git/project-folder', branch: 'master'
             }
         }
-        stage('Run Test Inside Docker'){
+
+        stage('Docker Build') {
             steps {
-                bat '%DOCKER% run --rm python-app pytest'
+                script {
+                    try {
+                        bat 'docker build -t html-app .'
+                    } catch (err) {
+                        echo 'Docker build failed'
+                        currentBuild.result = 'FAILURE'
+                        error 'Stopping pipeline'
+                    }
+                }
             }
         }
-        stage('Run Application') {
-            steps{
-                bat '%DOCKER% run --rm python-app'
+
+        stage('Deploy Container') {
+            steps {
+                retry(2) {
+                    bat 'docker run -d -p 8085:80 html-app'
+                }
             }
+        }
+
+    }
+
+    post {
+        always {
+            bat 'docker system prune -f'
         }
     }
 }
