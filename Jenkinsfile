@@ -8,7 +8,7 @@ pipeline {
 
         stage('Checkout Local Git') {
             steps {
-                git url: 'C:/git/project-folder', branch: 'master'
+                git url: 'https://github.com/KrishnaKoushikElluru/jenkins.git', branch: 'koushik'
             }
         }
 
@@ -16,7 +16,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        bat 'docker build -t html-app .'
+                        bat 'docker build -t app .'
                     } catch (err) {
                         echo 'Docker build failed'
                         currentBuild.result = 'FAILURE'
@@ -29,7 +29,7 @@ pipeline {
         stage('Deploy Container') {
             steps {
                 retry(2) {
-                    bat 'docker run -d -p 8085:80 html-app'
+                    bat 'docker run -d -p 8085:80 app'
                 }
             }
         }
