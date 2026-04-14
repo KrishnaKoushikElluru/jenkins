@@ -22,7 +22,7 @@ pipeline {
             steps{
                 script{
                     try{
-                        bat 'docker built -t html-app .'
+                        bat 'docker build -t html-app .'
                     }catch(e){
                         echo "build failed"
                         currentBuild.result='FAILURE'
