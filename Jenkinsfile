@@ -37,7 +37,7 @@ pipeline {
     }
 
     post {
-        always {
+        failure {
             bat 'docker system prune -f'
         }
     }
